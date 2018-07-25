@@ -232,6 +232,7 @@ class LiNGAM():
         causal_matrix = self.B_prune.copy()
         reg_list = {i:causal_matrix[i,:] != 0 for i in range(self.n_dim)}
         for i in range(self.n_dim):
+            norm_flag = False
             if np.sum(reg_list[i]) != 0:
                 y_reg = X[:,i]
                 X_reg = X.T[reg_list[i]].T
@@ -244,15 +245,8 @@ class LiNGAM():
                 if self.shapiro == True :
                     if stats.shapiro(residual)[1] > 0.05 :
                         norm_flag = True
-                    else :
-                        norm_flag = False
-                else:
-                    norm_flag = False
-                    residual_flag_.append(norm_flag)
                 causal_matrix[i,reg_list[i]] = clf.coef_
-            else:
-                norm_flag = False
-                residual_flag_.append(norm_flag)
+            residual_flag_.append(norm_flag)
         self.residual_flag = residual_flag_
         return causal_matrix
 

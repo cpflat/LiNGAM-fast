@@ -444,8 +444,18 @@ class LiNGAM():
                     if self.B[i,j]!=0:
                         print(a,"---|%.3f|--->"%(self.B[i,j]),b)
 
-    def visualize(self):
-        return self._visualize_graphviz()
+    def visualize(self, lib = "graphviz"):
+        """Return directed graph object for visualization.
+
+        Args:
+            lib (str): graphviz or networkx available.
+        """
+        if lib == "graphviz":
+            return self._visualize_graphviz()
+        elif lib == "networkx":
+            return self._visualize_networkx()
+        else:
+            raise NotImplementedError
 
     # Visualize cause of X by using Digraph.
     def _visualize_graphviz(self):
@@ -466,8 +476,35 @@ class LiNGAM():
             non_edge_flg = 1
             for k, ck in enumerate(columns) :
                 if B[l, k] != 0 :
-                    G.edge(ck, cl, color=color, label= "    " + str(B[l, k].round(3)))
+                    G.edge(ck, cl, color=color,
+                           label= "    " + str(B[l, k].round(3)))
                     non_edge_flg = 0
             if non_edge_flg == 1:
                 G.node(cl, shape="circle", color="blue")
         return G
+
+    def _visualize_networkx(self):
+        import networkx as nx
+        B = self.B
+        residual_flag = self.residual_flag
+        columns = self.columns
+
+        G = nx.DiGraph()
+        for l, cl in enumerate(columns):
+            if len(residual_flag) > 0:
+                if residual_flag > 0:
+                    color = "red"
+                else:
+                    color = "black"
+            else:
+                color = "black"
+            non_edge_flg = 1
+            for k, ck in enumerate(columns):
+                if B[l, k] != 0:
+                    G.add_edge(ck, cl, color = color, 
+                               label = str(B[l, k].round(3)))
+                    non_edge_flg = 0
+            if non_edge_flg == 1:
+                G.add_node(cl, color = "blue")
+        return G
+

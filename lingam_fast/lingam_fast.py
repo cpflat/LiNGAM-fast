@@ -246,6 +246,8 @@ class LiNGAM():
                         norm_flag = True
                     else :
                         norm_flag = False
+                else:
+                    norm_flag = False
                     residual_flag_.append(norm_flag)
                 causal_matrix[i,reg_list[i]] = clf.coef_
             else:
@@ -492,7 +494,7 @@ class LiNGAM():
         G = nx.DiGraph()
         for l, cl in enumerate(columns):
             if len(residual_flag) > 0:
-                if residual_flag > 0:
+                if residual_flag[l] == True :
                     color = "red"
                 else:
                     color = "black"

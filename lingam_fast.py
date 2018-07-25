@@ -4,7 +4,6 @@ import pandas as pd
 from sklearn.decomposition import FastICA
 from sklearn import linear_model
 from scipy.optimize import linear_sum_assignment
-from graphviz import Digraph
 import scipy.stats as stats
 from tqdm import tqdm
 
@@ -445,8 +444,12 @@ class LiNGAM():
                     if self.B[i,j]!=0:
                         print(a,"---|%.3f|--->"%(self.B[i,j]),b)
 
-    # Visualize cause of X by using Digraph.
     def visualize(self):
+        return self._visualize_graphviz()
+
+    # Visualize cause of X by using Digraph.
+    def _visualize_graphviz(self):
+        from graphviz import Digraph
         B = self.B
         residual_flag = self.residual_flag
         columns = self.columns
